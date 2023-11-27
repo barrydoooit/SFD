@@ -241,7 +241,7 @@ class DataProcessor(object):
             else:
                 print("[DataProcessor] Device Check Warning: Using CPU")
 
-            from spconv.utils import PointToVoxel
+            from spconv.pytorch.utils import PointToVoxel
             voxel_generator = PointToVoxel(
                 vsize_xyz=config.VOXEL_SIZE,
                 coors_range_xyz=self.point_cloud_range,
