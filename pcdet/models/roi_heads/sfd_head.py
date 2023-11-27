@@ -399,20 +399,20 @@ class SFDHead(RoIHeadTemplate):
 
     def post_act_block(self, in_channels, out_channels, kernel_size, indice_key, stride=1, padding=0, conv_type='subm'):
         if conv_type == 'subm':
-            m = SparseSequential(
+            m = spconv.SparseSequential(
                 spconv.SubMConv3d(in_channels, out_channels, kernel_size, bias=False, indice_key=indice_key),
                 nn.BatchNorm1d(out_channels, eps=1e-3, momentum=0.01),
                 nn.ReLU(),
             )
         elif conv_type == 'spconv':
-            m = SparseSequential(
+            m = spconv.SparseSequential(
                 spconv.SparseConv3d(in_channels, out_channels, kernel_size, stride=stride, padding=padding,
                                     bias=False, indice_key=indice_key),
                 nn.BatchNorm1d(out_channels, eps=1e-3, momentum=0.01),
                 nn.ReLU(),
             )
         elif conv_type == 'inverseconv':
-            m = SparseSequential(
+            m = spconv.SparseSequential(
                 spconv.SparseInverseConv3d(in_channels, out_channels, kernel_size,
                                            indice_key=indice_key, bias=False),
                 nn.BatchNorm1d(out_channels, eps=1e-3, momentum=0.01),
