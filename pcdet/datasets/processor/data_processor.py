@@ -1,7 +1,7 @@
 from functools import partial
 
 import numpy as np
-
+import torch
 from ...utils import box_utils, common_utils
 
 
@@ -219,16 +219,38 @@ class DataProcessor(object):
 
     def transform_points_to_voxels_valid(self, data_dict=None, config=None, voxel_generator=None):
         if data_dict is None:
-            try:
-                from spconv.utils import VoxelGeneratorV2 as VoxelGenerator
-            except:
-                from spconv.utils import VoxelGenerator
-            voxel_generator = VoxelGenerator(
-                voxel_size=config.VOXEL_SIZE,
-                point_cloud_range=self.point_cloud_range,
-                max_num_points=config.MAX_POINTS_PER_VOXEL,
-                max_voxels=config.MAX_NUMBER_OF_VOXELS[self.mode]
+            ## SFD Originally use VoxelGeneratorV2, which is not supported in spconv2
+            # try:
+            #     from spconv.utils import VoxelGeneratorV2 as VoxelGenerator
+            # except:
+            #     from spconv.utils import VoxelGenerator
+            # voxel_generator = VoxelGenerator(
+            #     voxel_size=config.VOXEL_SIZE,
+            #     point_cloud_range=self.point_cloud_range,
+            #     max_num_points=config.MAX_POINTS_PER_VOXEL,
+            #     max_voxels=config.MAX_NUMBER_OF_VOXELS[self.mode]
+            # )
+
+            ## Trying to use PointToVoxel instead
+
+            # Check if a GPU is available
+            device = torch.device("cpu:0")
+            if torch.cuda.is_available():
+                device = torch.device("cuda:0")
+                print("[DataProcessor] Device Check:", "Using GPU")
+            else:
+                print("[DataProcessor] Device Check Warning: Using CPU")
+
+            from spconv.utils import PointToVoxel
+            voxel_generator = PointToVoxel(
+                vsize_xyz=config.VOXEL_SIZE,
+                coors_range_xyz=self.point_cloud_range,
+                num_point_features=config.NUM_POINT_FEATURES,
+                max_num_voxels=config.MAX_NUMBER_OF_VOXELS[self.mode],
+                max_num_points_per_voxel=config.MAX_POINTS_PER_VOXEL,
+                device=device
             )
+
             grid_size = (self.point_cloud_range[3:6] - self.point_cloud_range[0:3]) / np.array(config.VOXEL_SIZE)
             self.grid_size = np.round(grid_size).astype(np.int64)
             self.voxel_size = config.VOXEL_SIZE

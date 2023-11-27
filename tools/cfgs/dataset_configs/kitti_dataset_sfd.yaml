@@ -69,3 +69,4 @@ DATA_PROCESSOR:
         'train': 16000,
         'test': 40000
       }
+      NUM_POINT_FEATURES: 4
