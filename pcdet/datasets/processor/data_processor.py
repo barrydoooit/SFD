@@ -245,7 +245,7 @@ class DataProcessor(object):
             voxel_generator = PointToVoxel(
                 vsize_xyz=config.VOXEL_SIZE,
                 coors_range_xyz=self.point_cloud_range,
-                num_point_features=config.NUM_POINT_FEATURES,
+                num_point_features=4,
                 max_num_voxels=config.MAX_NUMBER_OF_VOXELS[self.mode],
                 max_num_points_per_voxel=config.MAX_POINTS_PER_VOXEL,
                 device=device

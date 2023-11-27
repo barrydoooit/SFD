@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import spconv
+import spconv.pytorch as spconv
 
 from ....ops.pointnet2.pointnet2_stack import pointnet2_modules as pointnet2_stack_modules
 from ....ops.pointnet2.pointnet2_stack import pointnet2_utils as pointnet2_stack_utils
