@@ -84,7 +84,10 @@ def eval_one_epoch(cfg, model, dataloader, epoch_id, logger, dist_test=False, sa
     else:
         world_size = 1
     logger.info('*************** Performance of EPOCH %s *****************' % epoch_id)
-
+    assert run_time > 0
+    assert len(dataloader.dataset) > 0
+    assert world_size > 0
+    
     logger.info('Run time per sample: %.4f second.' % (run_time / (len(dataloader.dataset) / world_size)))
 
     sec_per_example = (time.time() - start_time) / (len(dataloader.dataset) / world_size)
